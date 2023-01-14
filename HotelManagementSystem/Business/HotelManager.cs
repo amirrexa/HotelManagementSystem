@@ -69,7 +69,7 @@ namespace HotelManagementSystem.Business
             if (room.Status != RoomStatus.Unoccupied)
                 room.UpdateStatus(RoomStatus.Unoccupied, null);
             else
-                throw new Exception("Room is already unoccupied.")
+                throw new Exception("Room is already unoccupied.");
         }
 
         public void CancelReservation(Room room, Customer customer)
@@ -103,5 +103,4 @@ namespace HotelManagementSystem.Business
             }
         }
     }
-}
 }

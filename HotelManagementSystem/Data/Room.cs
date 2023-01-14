@@ -12,7 +12,12 @@ namespace HotelManagementSystem.Data
         public RoomType Type { get; private set; }
         public RoomStatus Status { get; private set; }
         public Customer Customer { get; private set; }
+        public int Id { get; set; }
 
+        public Room()
+        {
+
+        }
         public Room(RoomType roomType, RoomStatus roomStatus, byte number)
         {
             Type = roomType;
