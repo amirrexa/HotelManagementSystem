@@ -1,1 +1,7 @@
 *.vs/
+/.vs/HotelManagementSystem/DesignTimeBuild/.dtbcache.v2
+/.vs/HotelManagementSystem/v17/.futdcache.v2
+/.vs/ProjectEvaluation/hotelmanagementsystem.metadata.v5.2
+/.vs/ProjectEvaluation/hotelmanagementsystem.projects.v5.2
+*.dll
+/HotelManagementSystem/bin/Debug/net6.0
