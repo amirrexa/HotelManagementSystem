@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace HotelManagementSystem.Data
 {
-    internal class Receptionist
+    public class Receptionist
     {
+
     }
 }

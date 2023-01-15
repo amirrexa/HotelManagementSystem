@@ -1,4 +1,5 @@
 ﻿using HotelManagementSystem.Business;
+using HotelManagementSystem.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,9 @@ public class Program
 {
     static void Main(string[] args)
     {
-        
+        var hotelManager = new HotelManager();
+        hotelManager.InitializeRooms();
+
+
     }
 }

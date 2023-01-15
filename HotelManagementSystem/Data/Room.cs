@@ -8,7 +8,7 @@ namespace HotelManagementSystem.Data
 {
     public class Room
     {
-        public byte Number { get; }
+        public byte Number { get; private set; }
         public RoomType Type { get; private set; }
         public RoomStatus Status { get; private set; }
         public Customer Customer { get; private set; }
