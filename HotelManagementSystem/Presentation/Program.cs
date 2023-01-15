@@ -2,6 +2,7 @@
 using HotelManagementSystem.Data;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
@@ -12,8 +13,11 @@ public class Program
     {
         var hotelManager = new HotelManager();
         hotelManager.InitializeRooms();
+        hotelManager.GetRoom(1);
         //hotelManager.AddCustomer("Amir");
         //hotelManager.UpdateCustomerName(hotelManager.GetCustomer("Amir"),"Rima");
         hotelManager.RemoveCustomer(hotelManager.GetCustomer("Rima"));
+
+        
     }
 }

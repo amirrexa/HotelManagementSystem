@@ -14,7 +14,7 @@ namespace HotelManagementSystem.Data
         public Customer Customer { get; private set; }
         public int Id { get; set; }
 
-        public Room()
+        private Room()
         {
 
         }

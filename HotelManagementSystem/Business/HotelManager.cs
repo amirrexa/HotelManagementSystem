@@ -74,7 +74,7 @@ namespace HotelManagementSystem.Business
         }
         public Room GetRoom(int number)
         {
-            return (Room)hotelContext.rooms.Where(r => r.Number == number);
+            return hotelContext.rooms.FirstOrDefault(r => r.Number == number);
         }
 
         public void AddRoom(Room room)
