@@ -5,3 +5,6 @@
 /.vs/ProjectEvaluation/hotelmanagementsystem.projects.v5.2
 *.dll
 /HotelManagementSystem/bin/Debug/net6.0
+/TestProject1/obj
+/Web/bin/Debug/net6.0
+/Web/obj
