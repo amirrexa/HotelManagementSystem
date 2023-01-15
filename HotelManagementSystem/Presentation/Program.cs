@@ -12,7 +12,8 @@ public class Program
     {
         var hotelManager = new HotelManager();
         hotelManager.InitializeRooms();
-
-
+        //hotelManager.AddCustomer("Amir");
+        //hotelManager.UpdateCustomerName(hotelManager.GetCustomer("Amir"),"Rima");
+        hotelManager.RemoveCustomer(hotelManager.GetCustomer("Rima"));
     }
 }

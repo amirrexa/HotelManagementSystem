@@ -11,12 +11,16 @@ namespace HotelManagementSystem.Data
         public string Name { get; private set; }
         public int Id { get; set; }
 
-        public Customer()
+        private Customer()
         {
         }
         public Customer(string name)
         {
             Name = name;
+        }
+        public void UpdateName(string newName)
+        {
+            Name = newName;
         }
     }
 }

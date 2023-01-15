@@ -25,21 +25,17 @@ namespace HotelManagementSystem.Data
             Number = number;
         }
 
-        public void UpdateStatus(RoomStatus roomStatus, Customer customer)
+        public void UpdateStatus(RoomStatus roomStatus)
         {
-            if (Status == RoomStatus.Occupied && roomStatus == RoomStatus.Reserved)
-            {
-                throw new Exception("Room is full");
-            }
-            else if (Status == roomStatus)
-            {
+            if (Status == roomStatus)
                 throw new Exception($"Room is {Status}");
-            }
             else
-            {
                 Status = roomStatus;
-                Customer = customer;
-            }
+        }
+
+        public void UpdateCustomer(Customer customer)
+        {
+            Customer = customer;
         }
     }
 }

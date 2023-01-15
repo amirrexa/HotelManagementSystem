@@ -14,7 +14,7 @@ namespace HotelManagementSystem.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=.\SQLEXPRESS;Database=HotelDB;Trusted_Connection=True;Encrypt =false;");
+            optionsBuilder.UseSqlServer(@"Server=.\SQLEXPRESS;Database=HotelDB;Trusted_Connection=True;Encrypt=False;"); //Encrypt False Ro Nazari Kar Nemikone
         }
     }
 }
