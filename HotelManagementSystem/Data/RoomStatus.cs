@@ -9,7 +9,7 @@ namespace HotelManagementSystem.Data
     public enum RoomStatus
     {
         Unoccupied,
-        Occupied,
+        Assigned,
         Reserved
     }
 }

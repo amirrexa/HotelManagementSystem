@@ -4,6 +4,7 @@ using HotelManagementSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelManagementSystem.Migrations
 {
     [DbContext(typeof(HotelContext))]
-    partial class HotelContextModelSnapshot : ModelSnapshot
+    [Migration("20230205130444_RenamedReservationDbSetToRoomLogs")]
+    partial class RenamedReservationDbSetToRoomLogs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,7 +74,7 @@ namespace HotelManagementSystem.Migrations
                     b.ToTable("rooms");
                 });
 
-            modelBuilder.Entity("HotelManagementSystem.Data.RoomOperation", b =>
+            modelBuilder.Entity("HotelManagementSystem.Data.RoomLogs", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -103,7 +106,7 @@ namespace HotelManagementSystem.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("roomOperations");
+                    b.ToTable("roomLogs");
                 });
 
             modelBuilder.Entity("HotelManagementSystem.Data.Room", b =>
@@ -115,7 +118,7 @@ namespace HotelManagementSystem.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("HotelManagementSystem.Data.RoomOperation", b =>
+            modelBuilder.Entity("HotelManagementSystem.Data.RoomLogs", b =>
                 {
                     b.HasOne("HotelManagementSystem.Data.Customer", "Customer")
                         .WithMany()

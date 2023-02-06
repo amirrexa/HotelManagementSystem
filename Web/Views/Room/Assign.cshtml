@@ -1,0 +1,24 @@
+﻿@using HotelManagementSystem.Data;
+@{
+    ViewData["Title"] = "Assign Room";
+}
+@model (Room room, List<DropDownViewModel> customers)
+
+<blockquote>
+    <form asp-action="Assign" asp-controller="Room" method="post">
+        <input type="hidden" name="RoomId" value="@Model.room.Id"> <!-- bayad room id ro dashte bashe ke khodemoon be soorate dasti midim behesh -->
+        <select name="CustomerId">
+            @foreach (var customer in Model.customers)
+            {
+                <option value="@customer.Id">@customer.Value</option>
+            }
+        </select>
+        <hr>
+        <input type="hidden" name="FromDate" placeholder="Enter the beginning of reservation date: ">
+        <input type="date" name="ToDate" placeholder="Enter the end of reservation date: ">
+        <hr>
+        <input type="text" name="PaidAmount" placeholder="Enter the paid amount: ">
+        <hr>
+        <button type="submit" class="btn btn-primary">Assign</button>
+    </form>
+</blockquote>

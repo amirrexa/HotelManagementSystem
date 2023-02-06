@@ -11,6 +11,7 @@ namespace HotelManagementSystem.Data
     {
         public DbSet<Room> rooms { get; set; }
         public DbSet<Customer> customers { get; set; }
+        public DbSet<RoomOperation> roomOperations { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -1,0 +1,14 @@
+﻿@using HotelManagementSystem.Data;
+@{
+    ViewData["Title"] = "Free Room";
+}
+@model Room
+<h2>Free Room</h2>
+<hr>
+<blockquote>
+    <form asp-action="Free" asp-controller="Room" method="post">
+        <h3>Are you sure that you want to free this room?</h3>
+        <hr>
+        <button type="submit" value="Free">Free</button>
+    </form>
+</blockquote>

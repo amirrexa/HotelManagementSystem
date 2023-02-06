@@ -1,0 +1,18 @@
+﻿@using HotelManagementSystem.Data
+@{
+    ViewData["Title"] = "Create Customer";
+}
+@model Customer
+<h2>Create Customer</h2>
+<blockquote>
+    <form asp-action="Create" asp-controller="Customer" method="post">
+        
+        <label>Name: </label>
+        <input type="text" placeholder="Enter a name" asp-for="Name">
+        <hr>
+        <label>Phone Number: </label>
+        <input type="text" placeholder="Enter a phone number" asp-for="PhoneNumber">
+        <hr>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+</blockquote>

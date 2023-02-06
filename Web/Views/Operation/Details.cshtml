@@ -1,0 +1,27 @@
+﻿@using HotelManagementSystem.Data
+@{
+    ViewData["Title"] = "Operation Details";
+}
+@model RoomOperation
+
+<h2>
+    Operation Number
+</h2>
+
+<h4>
+    <ul>
+        <li>Action Type: @Model.RoomActionType</li>
+
+        @if (Model.RoomActionType == RoomActionType.Reservation)
+        {
+            <li>Reserved By: @Model.CustomerId</li>
+        }
+        @if (Model.RoomActionType == RoomActionType.Assignment)
+        {
+            <li>Assigned To: @Model.CustomerId</li>
+        }
+        <li>From Date: @Model.FromDate</li>
+        <li>To Date: @Model.ToDate</li>
+        <li>Total Paid Amount: $@Model.PaidAmount</li>
+    </ul>
+</h4>

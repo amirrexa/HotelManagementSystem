@@ -1,0 +1,26 @@
+﻿@using HotelManagementSystem.Data;
+@{
+    ViewData["Title"] = "Room Reservation";
+}
+@model (Room room, List<DropDownViewModel> customers)
+<blockquote>
+    <form asp-action="Reserve" asp-controller="Room" method="post">
+        <input type="hidden" name="RoomId" value="@Model.room.Id"> <!-- important concept-->
+        <select name="CustomerId">
+            @foreach (var customer in Model.customers)
+            {
+                <option value="@customer.Id">@customer.Value</option>
+                // "option value" must be a unique property
+            }
+        </select>
+        <hr>
+        <input type="date" name="FromDate" placeholder="Enter the beginning of reservation date: ">
+        <br>
+        <input type="date" name="ToDate" placeholder="Enter the end of reservation date: ">
+        <hr>
+        <input type="text" name="PaidAmount" placeholder="Enter the paid amount: ">
+        <hr>
+        <button type="submit" class="btn btn-primary">Reserve</button>
+
+    </form>
+</blockquote>

@@ -4,6 +4,7 @@ using HotelManagementSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelManagementSystem.Migrations
 {
     [DbContext(typeof(HotelContext))]
-    partial class HotelContextModelSnapshot : ModelSnapshot
+    [Migration("20230130084552_AddedReservationDbSet")]
+    partial class AddedReservationDbSet
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,6 +42,38 @@ namespace HotelManagementSystem.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("customers");
+                });
+
+            modelBuilder.Entity("HotelManagementSystem.Data.Reservation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FromDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("PaidAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ToDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("RoomId");
+
+                    b.ToTable("reservations");
                 });
 
             modelBuilder.Entity("HotelManagementSystem.Data.Room", b =>
@@ -71,51 +106,7 @@ namespace HotelManagementSystem.Migrations
                     b.ToTable("rooms");
                 });
 
-            modelBuilder.Entity("HotelManagementSystem.Data.RoomOperation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("FromDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("PaidAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("RoomActionType")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoomId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ToDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
-
-                    b.HasIndex("RoomId");
-
-                    b.ToTable("roomOperations");
-                });
-
-            modelBuilder.Entity("HotelManagementSystem.Data.Room", b =>
-                {
-                    b.HasOne("HotelManagementSystem.Data.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId");
-
-                    b.Navigation("Customer");
-                });
-
-            modelBuilder.Entity("HotelManagementSystem.Data.RoomOperation", b =>
+            modelBuilder.Entity("HotelManagementSystem.Data.Reservation", b =>
                 {
                     b.HasOne("HotelManagementSystem.Data.Customer", "Customer")
                         .WithMany()
@@ -132,6 +123,15 @@ namespace HotelManagementSystem.Migrations
                     b.Navigation("Customer");
 
                     b.Navigation("Room");
+                });
+
+            modelBuilder.Entity("HotelManagementSystem.Data.Room", b =>
+                {
+                    b.HasOne("HotelManagementSystem.Data.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId");
+
+                    b.Navigation("Customer");
                 });
 #pragma warning restore 612, 618
         }

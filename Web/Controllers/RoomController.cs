@@ -1,20 +1,33 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using HotelManagementSystem.Business;
+using HotelManagementSystem.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Web.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Web.Controllers
 {
     public class RoomController : Controller
     {
+        private readonly HotelManager hotelManager;
+        public RoomController()
+        {
+            hotelManager = new HotelManager();
+        }
+
         // GET: RoomController
         public ActionResult Index()
         {
-            return View();
+            var rooms = hotelManager.GetAllRooms();
+            return View(rooms);
         }
 
         // GET: RoomController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var room = hotelManager.GetRoom(id);
+            return View(room);
         }
 
         // GET: RoomController/Create
@@ -39,24 +52,24 @@ namespace Web.Controllers
         }
 
         // GET: RoomController/Edit/5
+        [HttpGet]
         public ActionResult Edit(int id)
         {
-            return View();
+            var room = hotelManager.GetRoom(id);
+            return View(room);
         }
 
         // POST: RoomController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Room room)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var roomToUpdate = hotelManager.GetRoom(room.Id);
+            hotelManager.UpdateRoomNumber(roomToUpdate, room.Number);
+            hotelManager.UpdateRoomStatus(roomToUpdate, room.Status);
+            hotelManager.UpdateRoomType(roomToUpdate, room.Type);
+            hotelManager.UpdateRoomActivation(roomToUpdate, room.IsActive);
+            return RedirectToAction("Index");
         }
 
         // GET: RoomController/Delete/5
@@ -77,6 +90,103 @@ namespace Web.Controllers
             catch
             {
                 return View();
+            }
+        }
+
+        [HttpGet]
+        public ActionResult Cancel(int id)
+        {
+            hotelManager.GetRoom(id);
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Cancel(Room room)
+        {
+            var roomToCancelReservation = hotelManager.GetRoom(room.Id);
+            hotelManager.CancelReservation(roomToCancelReservation, roomToCancelReservation.Customer);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public ActionResult Free(int id)
+        {
+            hotelManager.GetRoom(id);
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Free(Room room)
+        {
+            var roomToFree = hotelManager.GetRoom(room.Id);
+            hotelManager.FreeRoom(roomToFree);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public ActionResult Reserve(int id)
+        {
+            var roomToReserve = hotelManager.GetRoom(id);
+            var customers = hotelManager
+                .GetAllCustomers()
+                .Select(c => new DropDownViewModel(c.Id, c.Name))
+                .ToList();
+
+            var tuple = (roomToReserve, customers);
+            return View(tuple);
+        }
+
+        [HttpPost]
+        public ActionResult Reserve(ReserveRoomViewModel reserve)
+        {
+            var roomToReserve = hotelManager.GetRoom(reserve.RoomId);
+            var customerToReserve = hotelManager.GetCustomer(reserve.CustomerId);
+            var reservation = new RoomOperation(roomToReserve, customerToReserve, reserve.FromDate, reserve.ToDate, reserve.PaidAmount, RoomActionType.Reservation);
+            hotelManager.ReserveRoom(reservation);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public ActionResult Assign(int id)
+        {
+            var roomToAssign = hotelManager.GetRoom(id);
+            var customers = hotelManager
+                .GetAllCustomers()
+                .Select(c => new DropDownViewModel(c.Id, c.Name))
+                .ToList();
+
+            var tuple = (roomToAssign, customers);
+            return View(tuple);
+        }
+
+        [HttpPost]
+        public ActionResult Assign(RoomOperation assign)
+        {
+            var roomToAssign = hotelManager.GetRoom(assign.RoomId);
+            var customerToAssign = hotelManager.GetCustomer(assign.CustomerId);
+            var assignment = new RoomOperation(roomToAssign, customerToAssign, DateTime.Now, assign.ToDate, assign.PaidAmount, RoomActionType.Assignment);
+            hotelManager.AssignRoom(assignment);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public ActionResult Operation(int id)
+        {
+            var roomToOperate = hotelManager.GetRoom(id);
+            return View(roomToOperate);
+        }
+
+        [HttpPost]
+        public ActionResult Operation(RoomActionType roomActionType)
+        {
+            switch (roomActionType)
+            {
+                case RoomActionType.Assignment:
+                    return RedirectToAction("Assign");
+                case RoomActionType.Reservation:
+                    return RedirectToAction("Reserve");
+                default:
+                    return View();
             }
         }
     }

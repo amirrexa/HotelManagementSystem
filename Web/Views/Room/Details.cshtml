@@ -1,0 +1,22 @@
+﻿@using HotelManagementSystem.Data;
+@{
+    ViewData["Title"] = "Room Details";
+}
+@model Room
+
+<h2>
+    Room Number @Model.Number
+</h2>
+
+<h4>
+    <ul>
+        <li>Type: @Model.Type</li>
+
+        @if (Model.Status == RoomStatus.Reserved || Model.Status == RoomStatus.Assigned)
+        {
+            <li>Customer: @Model.Customer.Name</li>
+        }
+        <li>Status: @Model.Status</li>
+        <li>Active: @Model.IsActive</li>
+    </ul>
+</h4>

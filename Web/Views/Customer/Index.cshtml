@@ -1,0 +1,34 @@
+﻿@using HotelManagementSystem.Data;
+@{
+    ViewData["Title"] = "Customer Management";
+}
+@model List<Customer>
+
+
+@Html.ActionLink("Create New", "Create")
+    
+    
+<div class="text-center">
+    
+    <table class="table" style="width:100%">
+        <tr>
+            <th>Name</th>
+            <th>Operation</th>
+        </tr>
+
+        @{
+            foreach (var item in Model)
+            {
+                <tr>
+                
+                    <td>@item.Name</td>
+                    <td>
+                        <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Customer" asp-action="Details">Details</a>
+                        <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Customer" asp-action="Edit">Edit</a>
+                        <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Customer" asp-action="Delete">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+</div>

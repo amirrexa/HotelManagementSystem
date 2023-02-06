@@ -1,0 +1,14 @@
+﻿@using HotelManagementSystem.Data
+@{
+    ViewData["Title"] = "Customer Details";
+}
+@model Customer
+
+<h2>Customer ID: @Model.Id</h2>
+
+<h5>
+    <ul>
+        <li>Name: @Model.Name</li>
+        <li>Phone Number: @Model.PhoneNumber</li>
+    </ul>
+</h5>

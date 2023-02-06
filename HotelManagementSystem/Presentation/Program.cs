@@ -10,14 +10,7 @@ using System.Threading.Tasks;
 public class Program
 {
     static void Main(string[] args)
-    {
-        var hotelManager = new HotelManager();
-        hotelManager.InitializeRooms();
-        hotelManager.GetRoom(1);
-        //hotelManager.AddCustomer("Amir");
-        //hotelManager.UpdateCustomerName(hotelManager.GetCustomer("Amir"),"Rima");
-        hotelManager.RemoveCustomer(hotelManager.GetCustomer("Rima"));
+    { 
 
-        
     }
 }

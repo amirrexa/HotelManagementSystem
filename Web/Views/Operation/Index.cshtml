@@ -1,0 +1,33 @@
+﻿@using HotelManagementSystem.Data;
+@{
+    ViewData["Title"] = "Operation Management";
+}
+@model List<RoomOperation>
+
+<div class="text-center">
+    <table class="table" style="width:100%">
+        <tr>
+            <th>Id</th>
+            <th>RoomId</th>
+            <th>CustomerId</th>
+            <th>ActionType</th>
+            <th>Operation</th>
+        </tr>
+
+        @{
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.RoomId</td>
+                    <td>@item.CustomerId</td>
+                    <td>@item.RoomActionType</td>
+                        <td>
+                            <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Operation" asp-action="Details">Details</a>
+                            <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Operation" asp-action="Delete">Delete</a>
+                        </td>
+                </tr>
+            }
+        }
+    </table>
+</div>

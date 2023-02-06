@@ -1,0 +1,55 @@
+﻿@using HotelManagementSystem.Data;
+@{
+    ViewData["Title"] = "Room Management";
+}
+@model List<Room>
+
+<div class="text-center">
+    <table class="table" style="width:100%">
+        <tr>
+            <th>Number</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Active</th>
+            <th>Operation</th>
+        </tr>
+
+        @{
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Number</td>
+                    <td>@item.Type</td>
+                    <td>@item.Status</td>
+                    <td>@item.IsActive</td>
+                    @if(item.IsActive == true)
+                    {
+                    <td>
+                        <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Room" asp-action="Details">Details</a>
+                        <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Room" asp-action="Edit">Edit</a>
+                        @if (item.Status == RoomStatus.Unoccupied)
+                        {
+                            <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Room" asp-action="Reserve">Reserve</a>
+                            <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Room" asp-action="Assign">Assign</a>
+
+                            <!-- <a class="btn btn-outline-warning" asp-route-id=@item.Id asp-controller="Room" asp-action="Operation">Operation</a> -->
+                        }
+                        @if (item.Status == RoomStatus.Assigned)
+                        {
+                            <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Room" asp-action="Free">Free</a>
+                        }
+                        @if (item.Status == RoomStatus.Reserved)
+                        {
+                                <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Room" asp-action="Cancel">Cancel</a>
+                        }
+                    </td>
+                    }
+                    @if(item.IsActive == false)
+                    {
+                        <td><a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Room" asp-action="Edit">Edit</a></td>
+                    }
+                </tr>
+            }
+        }
+    </table>
+</div>

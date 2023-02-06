@@ -5,18 +5,11 @@
 namespace HotelManagementSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class AddedPhoneNumberAndNameToCustomer : Migration
+    public partial class AddedPhoneNumberForCustomer : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Name",
-                table: "customers",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
-
             migrationBuilder.AddColumn<string>(
                 name: "PhoneNumber",
                 table: "customers",
@@ -28,10 +21,6 @@ namespace HotelManagementSystem.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Name",
-                table: "customers");
-
             migrationBuilder.DropColumn(
                 name: "PhoneNumber",
                 table: "customers");

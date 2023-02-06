@@ -1,0 +1,18 @@
+﻿@using HotelManagementSystem.Data;
+@{
+    ViewData["Title"] = "Edit Customer";
+}
+@model Customer
+<h2>Edit Customer</h2>
+<blockquote>
+    <form asp-action="Edit" asp-controller="Customer" method="post">
+        
+        <label>Name: </label>
+        <input type="text" placeholder="Enter a name" asp-for="Name" value="@Model.Name">
+        <hr>
+        <label>Phone Number: </label>
+        <input type="text" placeholder="Enter a phone number" asp-for="PhoneNumber" value="@Model.PhoneNumber">
+        <hr>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</blockquote>

@@ -1,0 +1,13 @@
+﻿@using HotelManagementSystem.Data;
+@{
+    ViewData["Title"] = "Cancel Reservation";
+}
+@model Room
+<h2>Cancel Reservation</h2>
+<blockquote>
+    <form asp-action="Cancel" asp-controller="Room" method="post">
+        <h3>Are you sure that you want to cancel the reservation for this room?</h3>
+        <hr>
+        <button type="submit" value="Cancel">Cancel</button>
+    </form>
+</blockquote>

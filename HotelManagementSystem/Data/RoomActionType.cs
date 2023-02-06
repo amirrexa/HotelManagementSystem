@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace HotelManagementSystem.Data
 {
-    public class Receptionist
+    public enum RoomActionType
     {
-
+        Assignment=1,
+        Reservation
     }
 }
