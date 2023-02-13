@@ -2,26 +2,30 @@
 using HotelManagementSystem.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Web.Models;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Web.Controllers
 {
     public class RoomController : Controller
     {
+        private readonly HotelContext hotelContext;
         private readonly HotelManager hotelManager;
+
         public RoomController()
         {
             hotelManager = new HotelManager();
         }
 
         // GET: RoomController
-        public ActionResult Index()
+        public ActionResult Index([FromQuery] RoomSearchViewModel searchVM)
         {
-            var rooms = hotelManager.GetAllRooms();
-            return View(rooms);
+            var roomToSearch = hotelManager.GetAllRoomsByFilter(searchVM.Number, searchVM.Type, searchVM.Status, searchVM.IsActive);
+            return View((roomToSearch, searchVM));
         }
+
+        
 
         // GET: RoomController/Details/5
         public ActionResult Details(int id)
@@ -155,6 +159,8 @@ namespace Web.Controllers
                 .Select(c => new DropDownViewModel(c.Id, c.Name))
                 .ToList();
 
+            ViewBag.Id = new SelectList(customers, string.Empty);
+
             var tuple = (roomToAssign, customers);
             return View(tuple);
         }
@@ -168,6 +174,8 @@ namespace Web.Controllers
             hotelManager.AssignRoom(assignment);
             return RedirectToAction("Index");
         }
+
+        //OPERATION
 
         [HttpGet]
         public ActionResult Operation(int id)
@@ -189,5 +197,7 @@ namespace Web.Controllers
                     return View();
             }
         }
+
+        //SEARCH
     }
 }

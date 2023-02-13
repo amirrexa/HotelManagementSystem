@@ -77,6 +77,20 @@ namespace HotelManagementSystem.Business
         {
             return hotelContext.rooms.ToList();
         }
+        public List<Room> GetAllRoomsByFilter(byte? number, RoomType? type, RoomStatus? status, bool? isActive)
+        {
+            var query =  hotelContext.rooms.AsQueryable();
+            if (number.HasValue)
+                query = query.Where(r => r.Number == number.Value);
+            if (type.HasValue)
+                query = query.Where(r => r.Type == type.Value);
+            if (status.HasValue)
+                query = query.Where(r => r.Status == status.Value);
+            if (isActive.HasValue)
+                query = query.Where(r => r.IsActive == isActive.Value);
+
+            return query.ToList();
+        }
         public List<Room> GetEmptyRooms()
         {
             return hotelContext.rooms.Where(r => r.Status == RoomStatus.Unoccupied).ToList();
@@ -144,7 +158,6 @@ namespace HotelManagementSystem.Business
         public void UpdateRoomNumber(Room room, byte number)
         {
             room.UpdateNumber(number);
-
             hotelContext.SaveChanges();
         }
 

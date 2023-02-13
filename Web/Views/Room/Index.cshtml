@@ -2,8 +2,39 @@
 @{
     ViewData["Title"] = "Room Management";
 }
-@model List<Room>
+@model (List<Room> rooms, RoomSearchViewModel searchVM)
 
+<form method="post" asp-controller="Room" asp-action="Index">
+    <input type="submit" value="Index" />
+</form>
+<div>
+    <p>
+        <form asp-action="Index" asp-controller="Room" method="get">
+            Number: <input value="@Model.searchVM.Number" type="text" name="Number"><br />
+            Type: <select name="Type">
+                <option value="" selected></option>
+                <option value="@RoomType.Single">Single</option>
+                <option value="@RoomType.Double">Double</option>
+                <option value="@RoomType.Deluxe">Deluxe</option>
+                <option value="@RoomType.Suite">Suite</option>
+                })
+            </select><br />
+
+            Status: <select name="Status">
+                <option value="" selected></option>
+                <option value="@RoomStatus.Unoccupied">Unoccupied</option>
+                <option value="@RoomStatus.Reserved">Reserved</option>
+                <option value="@RoomStatus.Assigned">Assigned</option>
+            </select><br />
+            IsActive: <input type="checkbox" checked="@Model.searchVM.IsActive" name="IsActive"><br />
+
+            <button type="submit">Search</button>
+            <button type="reset">Clear</button>
+        </form>
+    </p>
+</div>
+
+<hr />
 <div class="text-center">
     <table class="table" style="width:100%">
         <tr>
@@ -15,36 +46,36 @@
         </tr>
 
         @{
-            foreach (var item in Model)
+            foreach (var item in Model.rooms)
             {
                 <tr>
                     <td>@item.Number</td>
                     <td>@item.Type</td>
                     <td>@item.Status</td>
                     <td>@item.IsActive</td>
-                    @if(item.IsActive == true)
+                    @if (item.IsActive == true)
                     {
-                    <td>
-                        <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Room" asp-action="Details">Details</a>
-                        <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Room" asp-action="Edit">Edit</a>
-                        @if (item.Status == RoomStatus.Unoccupied)
-                        {
-                            <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Room" asp-action="Reserve">Reserve</a>
-                            <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Room" asp-action="Assign">Assign</a>
+                        <td>
+                            <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Room" asp-action="Details">Details</a>
+                            <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Room" asp-action="Edit">Edit</a>
+                            @if (item.Status == RoomStatus.Unoccupied)
+                            {
+                                <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Room" asp-action="Reserve">Reserve</a>
+                                <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Room" asp-action="Assign">Assign</a>
 
-                            <!-- <a class="btn btn-outline-warning" asp-route-id=@item.Id asp-controller="Room" asp-action="Operation">Operation</a> -->
-                        }
-                        @if (item.Status == RoomStatus.Assigned)
-                        {
-                            <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Room" asp-action="Free">Free</a>
-                        }
-                        @if (item.Status == RoomStatus.Reserved)
-                        {
+                                <!-- <a class="btn btn-outline-warning" asp-route-id=@item.Id asp-controller="Room" asp-action="Operation">Operation</a> -->
+                            }
+                            @if (item.Status == RoomStatus.Assigned)
+                            {
+                                <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Room" asp-action="Free">Free</a>
+                            }
+                            @if (item.Status == RoomStatus.Reserved)
+                            {
                                 <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Room" asp-action="Cancel">Cancel</a>
-                        }
-                    </td>
+                            }
+                        </td>
                     }
-                    @if(item.IsActive == false)
+                    @if (item.IsActive == false)
                     {
                         <td><a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Room" asp-action="Edit">Edit</a></td>
                     }
