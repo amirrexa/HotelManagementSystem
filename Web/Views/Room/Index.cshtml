@@ -7,6 +7,8 @@
 <form method="post" asp-controller="Room" asp-action="Index">
     <input type="submit" value="Index" />
 </form>
+<hr />
+<h4>Search</h4>
 <div>
     <p>
         <form asp-action="Index" asp-controller="Room" method="get">
@@ -17,7 +19,6 @@
                 <option value="@RoomType.Double">Double</option>
                 <option value="@RoomType.Deluxe">Deluxe</option>
                 <option value="@RoomType.Suite">Suite</option>
-                })
             </select><br />
 
             Status: <select name="Status">
@@ -26,7 +27,20 @@
                 <option value="@RoomStatus.Reserved">Reserved</option>
                 <option value="@RoomStatus.Assigned">Assigned</option>
             </select><br />
-            IsActive: <input type="checkbox" checked="@Model.searchVM.IsActive" name="IsActive"><br />
+
+            IsActive: <select name="IsActive">
+                <option value="" selected>All</option>
+                <option value="True">Yes</option>
+                <option value="False">No</option>
+            </select><br /><br />
+
+            Sort By: <select name="SortBy">
+                <option value="" selected"></option>
+                <option value="@RoomSortBy.Number">Number</option>
+                <option value="@RoomSortBy.Type">Type</option>
+                <option value="@RoomSortBy.Status">Status</option>
+                <option value="@RoomSortBy.IsActive">Active</option>
+            </select>
 
             <button type="submit">Search</button>
             <button type="reset">Clear</button>

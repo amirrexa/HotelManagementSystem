@@ -10,7 +10,6 @@ namespace Web.Controllers
 {
     public class RoomController : Controller
     {
-        private readonly HotelContext hotelContext;
         private readonly HotelManager hotelManager;
 
         public RoomController()
@@ -21,7 +20,7 @@ namespace Web.Controllers
         // GET: RoomController
         public ActionResult Index([FromQuery] RoomSearchViewModel searchVM)
         {
-            var roomToSearch = hotelManager.GetAllRoomsByFilter(searchVM.Number, searchVM.Type, searchVM.Status, searchVM.IsActive);
+            var roomToSearch = hotelManager.GetAllRoomsByFilter(searchVM.Number, searchVM.Type, searchVM.Status, searchVM.IsActive, searchVM.SortBy);
             return View((roomToSearch, searchVM));
         }
 

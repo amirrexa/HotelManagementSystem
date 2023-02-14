@@ -71,13 +71,20 @@ namespace HotelManagementSystem.Business
         {
             return hotelContext.customers.ToList();
         }
+        public List<Customer> GetAllCustomersByFilter(string? name, string? phoneNumber)
+        {
+            var query = hotelContext.customers.AsQueryable();
+            query = query.Where(c => c.Name == name);
+            query = query.Where(c => c.PhoneNumber == phoneNumber);
+            return query.ToList();
+        }
 
         //METHODS FOR ROOM
         public List<Room> GetAllRooms()
         {
             return hotelContext.rooms.ToList();
         }
-        public List<Room> GetAllRoomsByFilter(byte? number, RoomType? type, RoomStatus? status, bool? isActive)
+        public List<Room> GetAllRoomsByFilter(byte? number, RoomType? type, RoomStatus? status, bool? isActive, RoomSortBy? sortBy)
         {
             var query =  hotelContext.rooms.AsQueryable();
             if (number.HasValue)
@@ -88,9 +95,21 @@ namespace HotelManagementSystem.Business
                 query = query.Where(r => r.Status == status.Value);
             if (isActive.HasValue)
                 query = query.Where(r => r.IsActive == isActive.Value);
-
+            if (sortBy.HasValue)
+            {
+                if(sortBy == RoomSortBy.Number)
+                    query = query.OrderBy(r => r.Number);
+                if(sortBy == RoomSortBy.Type)
+                    query = query.OrderBy(r => r.Type);
+                if (sortBy == RoomSortBy.Status)
+                    query = query.OrderBy(r => r.Status);
+                if (sortBy == RoomSortBy.IsActive)
+                    query = query.OrderBy(r => r.IsActive);
+            }
+                
             return query.ToList();
         }
+
         public List<Room> GetEmptyRooms()
         {
             return hotelContext.rooms.Where(r => r.Status == RoomStatus.Unoccupied).ToList();

@@ -18,7 +18,6 @@ namespace Web.Controllers
             var customers = hotelManager.GetAllCustomers();
             return View(customers);
         }
-
         // GET: CustomerController/Details/5
         public ActionResult Details(int id)
         {
