@@ -7,6 +7,7 @@
 <blockquote>
     <form asp-action="Assign" asp-controller="Room" method="post">
         <input type="hidden" name="RoomId" value="@Model.room.Id"> <!-- bayad room id ro dashte bashe ke khodemoon be soorate dasti midim behesh -->
+        <input type="hidden"
         <select name="CustomerId">
             @foreach (var customer in Model.customers)
             {

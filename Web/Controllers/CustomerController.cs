@@ -2,6 +2,7 @@
 using HotelManagementSystem.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Web.Models;
 
 namespace Web.Controllers
 {
@@ -13,9 +14,9 @@ namespace Web.Controllers
             hotelManager = new HotelManager();
         }
         // GET: CustomerController
-        public ActionResult Index()
+        public ActionResult Index([FromQuery] CustomerSearchViewModel searchVM)
         {
-            var customers = hotelManager.GetAllCustomers();
+            var customers = hotelManager.GetAllCustomersByFilter(searchVM.Name, searchVM.PhoneNumber, searchVM.SortBy);
             return View(customers);
         }
         // GET: CustomerController/Details/5

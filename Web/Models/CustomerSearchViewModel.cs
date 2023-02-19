@@ -5,5 +5,6 @@ namespace Web.Models
     {
         public string? Name { get; set; }
         public string? PhoneNumber { get; set; }
+        public CustomerSortBy? SortBy { get; set; }
     }
 }

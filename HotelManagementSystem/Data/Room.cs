@@ -48,10 +48,5 @@ namespace HotelManagementSystem.Data
         {
             Type = roomType;
         }
-
-        public void ToggleActivation()
-        {
-            IsActive = !IsActive;
-        }
     }
 }

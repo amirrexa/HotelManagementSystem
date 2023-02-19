@@ -2,6 +2,7 @@
 using HotelManagementSystem.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Web.Models;
 
 namespace Web.Controllers
 {
@@ -12,12 +13,13 @@ namespace Web.Controllers
         {
             hotelManager = new HotelManager();
         }
+
         // GET: OperationsController
         [HttpGet]
-        public ActionResult Index()
+        public ActionResult Index([FromQuery] OperationSearchViewModel searchVM)
         {
-            var operations = hotelManager.GetAllRoomOperations();
-            return View(operations);
+            var operationToSearch = hotelManager.GetAllOperationsByFilter( searchVM.CustomerName, searchVM.RoomNumber, searchVM.FromDate, searchVM.ToDate, searchVM.PaidAmount, searchVM.RoomActionType, searchVM.SortBy);
+            return View((operationToSearch, searchVM));
         }
 
         // GET: OperationsController/Details/5

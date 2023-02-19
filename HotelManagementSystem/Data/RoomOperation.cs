@@ -11,7 +11,6 @@ namespace HotelManagementSystem.Data
     {
         public RoomOperation()
         {
-
         }
         public RoomOperation(Room room, Customer customer, DateTime fromDate, DateTime toDate, decimal paidAmount, RoomActionType roomActionType)
         {

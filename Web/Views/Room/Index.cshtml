@@ -4,15 +4,16 @@
 }
 @model (List<Room> rooms, RoomSearchViewModel searchVM)
 
+<h2>Room Management</h2>
 <form method="post" asp-controller="Room" asp-action="Index">
     <input type="submit" value="Index" />
 </form>
 <hr />
-<h4>Search</h4>
+<h5>Filter</h5>
 <div>
     <p>
         <form asp-action="Index" asp-controller="Room" method="get">
-            Number: <input value="@Model.searchVM.Number" type="text" name="Number"><br />
+            Number: <input value="" type="number" name="Number"><br /> <!-- input value-sh Model.searchVM.Number bood ke bardashtamesh -->
             Type: <select name="Type">
                 <option value="" selected></option>
                 <option value="@RoomType.Single">Single</option>
@@ -32,7 +33,7 @@
                 <option value="" selected>All</option>
                 <option value="True">Yes</option>
                 <option value="False">No</option>
-            </select><br /><br />
+            </select><br />
 
             Sort By: <select name="SortBy">
                 <option value="" selected"></option>
@@ -41,7 +42,7 @@
                 <option value="@RoomSortBy.Status">Status</option>
                 <option value="@RoomSortBy.IsActive">Active</option>
             </select>
-
+            <br /><br />
             <button type="submit">Search</button>
             <button type="reset">Clear</button>
         </form>

@@ -2,30 +2,71 @@
 @{
     ViewData["Title"] = "Operation Management";
 }
-@model List<RoomOperation>
+@model (List<RoomOperation> operations, OperationSearchViewModel searchVM)
+
+    <h2>Operation Management</h2>
+<form method="post" asp-controller="Operation" asp-action="Index">
+    <input type="submit" value="Index" />
+</form>
+<hr />
+<!-- Begin Search -->
+<h5>Filter</h5>
+<div>
+    <p>
+        <form asp-action="Index" asp-controller="Operation" method="get">
+
+            Room Number: <input type="number" name="RoomNumber" value=""><br />
+
+            Customer Name: <input type="text" name="CustomerName" value="" /><br />
+
+            Action Type: <select name="ActionType">
+                <option value="" selected></option>
+                <option value="@RoomActionType.Assignment">Assignment</option>
+                <option value="@RoomActionType.Reservation">Reserved</option>
+            </select><br />
+            From Date: <input type="date" name="FromDate" value="" /><br />
+            To Date: <input type="date" name="ToDate" value="" /><br />
+            Sort By: <select name="SortBy">
+                <option value="" selected"></option>
+                <option value="@OperationSortBy.RoomNumber">Room Number</option>
+                <option value="@OperationSortBy.CustomerName">Customer Name</option>
+                <option value="@OperationSortBy.ActionType">Action Type</option>
+                <option value="@OperationSortBy.FromDate">Oldest</option>
+                <option value="@OperationSortBy.ToDate">Newest</option>
+            </select>
+            <br /><br />
+            <button type="submit">Search</button>
+            <button type="reset">Clear</button>
+        </form>
+    </p>
+</div>
+<!-- Finish Search -->
 
 <div class="text-center">
     <table class="table" style="width:100%">
         <tr>
-            <th>Id</th>
-            <th>RoomId</th>
-            <th>CustomerId</th>
+            <th>RoomNumber</th>
+            <th>CustomerName</th>
             <th>ActionType</th>
+            <th>FromDate</th>
+            <th>ToDate</th>
             <th>Operation</th>
         </tr>
 
         @{
-            foreach (var item in Model)
+            foreach (var item in Model.operations)
             {
                 <tr>
-                    <td>@item.Id</td>
-                    <td>@item.RoomId</td>
-                    <td>@item.CustomerId</td>
+                    <td>@item.Room.Number</td>
+                    <td>@item.Customer.Name</td>
                     <td>@item.RoomActionType</td>
-                        <td>
-                            <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Operation" asp-action="Details">Details</a>
-                            <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Operation" asp-action="Delete">Delete</a>
-                        </td>
+                    <td>@item.FromDate.ToString("yyyy/MM/dd")</td>
+                    <td>@item.ToDate.ToString("yyyy/MM/dd")</td>
+                    <td>
+                        <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Operation" asp-action="Details">Details</a>
+                        <!-- <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Operation" asp-action="Delete">Delete</a> -->
+                    </td>
+                    
                 </tr>
             }
         }

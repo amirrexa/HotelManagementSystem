@@ -5,10 +5,14 @@
 @model List<Customer>
 
 
-@Html.ActionLink("Create New", "Create")
-    
 
     
+<h2>Customer Management</h2>
+<form method="post" asp-controller="Customer" asp-action="Index">
+    <input type="submit" value="Index" />
+</form>
+<hr />
+@Html.ActionLink("Create New", "Create")
 <div class="text-center">
     
     <table class="table" style="width:100%">

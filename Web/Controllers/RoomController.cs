@@ -99,8 +99,9 @@ namespace Web.Controllers
         [HttpGet]
         public ActionResult Cancel(int id)
         {
-            hotelManager.GetRoom(id);
-            return View();
+            var roomToCancel = hotelManager.GetRoom(id);
+            var customerToCancel = roomToCancel.Customer;
+            return View((roomToCancel, customerToCancel));
         }
 
         [HttpPost]
@@ -114,8 +115,8 @@ namespace Web.Controllers
         [HttpGet]
         public ActionResult Free(int id)
         {
-            hotelManager.GetRoom(id);
-            return View();
+            var roomToFree = hotelManager.GetRoom(id);
+            return View(roomToFree);
         }
 
         [HttpPost]

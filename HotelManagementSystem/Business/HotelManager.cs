@@ -71,11 +71,20 @@ namespace HotelManagementSystem.Business
         {
             return hotelContext.customers.ToList();
         }
-        public List<Customer> GetAllCustomersByFilter(string? name, string? phoneNumber)
+        public List<Customer> GetAllCustomersByFilter(string? name, string? phoneNumber, CustomerSortBy? sortBy)
         {
             var query = hotelContext.customers.AsQueryable();
-            query = query.Where(c => c.Name == name);
-            query = query.Where(c => c.PhoneNumber == phoneNumber);
+            if (!string.IsNullOrEmpty(name))
+                query = query.Where(c => c.Name.Contains(name));
+            if (!string.IsNullOrEmpty(phoneNumber))
+                query = query.Where(c => c.PhoneNumber.Contains(phoneNumber));
+            if (sortBy.HasValue)
+            {
+                if (sortBy == CustomerSortBy.Name)
+                    query = query.OrderBy(c => c.Name);
+                if (sortBy == CustomerSortBy.PhoneNumber)
+                    query = query.OrderBy(c => c.PhoneNumber);
+            }
             return query.ToList();
         }
 
@@ -86,7 +95,7 @@ namespace HotelManagementSystem.Business
         }
         public List<Room> GetAllRoomsByFilter(byte? number, RoomType? type, RoomStatus? status, bool? isActive, RoomSortBy? sortBy)
         {
-            var query =  hotelContext.rooms.AsQueryable();
+            var query = hotelContext.rooms.AsQueryable();
             if (number.HasValue)
                 query = query.Where(r => r.Number == number.Value);
             if (type.HasValue)
@@ -97,16 +106,16 @@ namespace HotelManagementSystem.Business
                 query = query.Where(r => r.IsActive == isActive.Value);
             if (sortBy.HasValue)
             {
-                if(sortBy == RoomSortBy.Number)
+                if (sortBy == RoomSortBy.Number)
                     query = query.OrderBy(r => r.Number);
-                if(sortBy == RoomSortBy.Type)
+                if (sortBy == RoomSortBy.Type)
                     query = query.OrderBy(r => r.Type);
                 if (sortBy == RoomSortBy.Status)
                     query = query.OrderBy(r => r.Status);
                 if (sortBy == RoomSortBy.IsActive)
                     query = query.OrderBy(r => r.IsActive);
             }
-                
+
             return query.ToList();
         }
 
@@ -237,7 +246,45 @@ namespace HotelManagementSystem.Business
 
         public RoomOperation GetRoomOperation(int id)
         {
-            return(hotelContext.roomOperations.Where(ro=>ro.Id == id).FirstOrDefault());
+            return (hotelContext.roomOperations.Where(ro => ro.Id == id).FirstOrDefault());
+        }
+
+        public List<RoomOperation> GetAllOperationsByFilter(string? customerName, byte? roomNumber, DateTime? fromDate, DateTime? toDate, decimal? paidAmount, RoomActionType? roomActionType, OperationSortBy? sortBy)
+        {
+            var query = hotelContext.roomOperations.AsQueryable(); // Important
+            if (!string.IsNullOrEmpty(customerName)) // Important
+                query = query.Include(o => o.Customer).Where(o => o.Customer.Name.Contains(customerName)); // Important
+            if (roomNumber.HasValue)
+                query = query.Include(o => o.Room).Where(o => o.Room.Number == roomNumber);
+            if (fromDate.HasValue)
+                query = query.Where(o => o.FromDate > fromDate); //In ghablesh == bood; moshkeli ke ijad mikard in bood ke fromdate ro vared mikardi hichi nemiavord
+            if (toDate.HasValue)
+                query = query.Where(o => o.ToDate < toDate); //In ghablesh == bood; moshkeli ke ijad mikard in bood ke todate ro vared mikardi hichi nemiavord
+            if (paidAmount.HasValue)
+                query = query.Where(o => o.PaidAmount == paidAmount);
+            if (roomActionType.HasValue)
+            {
+                if (roomActionType == RoomActionType.Assignment)
+                    query = query.Where(o => o.RoomActionType == RoomActionType.Assignment);
+                if (roomActionType == RoomActionType.Reservation)
+                    query = query.Where(o => o.RoomActionType == RoomActionType.Reservation);
+            }
+            if (sortBy.HasValue)
+            {
+                if (sortBy == OperationSortBy.RoomNumber)
+                    query = query.OrderBy(o => o.Room.Number);
+                if (sortBy == OperationSortBy.CustomerName)
+                    query = query.OrderBy(o => o.Customer.Name);
+                if (sortBy == OperationSortBy.ActionType)
+                    query = query.OrderBy(o => o.RoomActionType);
+                if (sortBy == OperationSortBy.FromDate)
+                    query = query.OrderBy(o => o.FromDate);
+                if (sortBy == OperationSortBy.ToDate)
+                    query = query.OrderBy(o => o.ToDate);
+            }
+
+            return query.Include(o => o.Room).Include(o => o.Customer).ToList(); //Include haro mitooni in tah benevisi ke behtar bashe
         }
     }
 }
+
