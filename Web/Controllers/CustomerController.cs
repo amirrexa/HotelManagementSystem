@@ -1,6 +1,5 @@
-﻿using HotelManagementSystem.Business;
-using HotelManagementSystem.Data;
-using Microsoft.AspNetCore.Http;
+﻿using HotelManagementSystem.Data;
+using HotelManagementSystem.Data.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Web.Models;
 
@@ -8,21 +7,20 @@ namespace Web.Controllers
 {
     public class CustomerController : Controller
     {
-        private readonly HotelManager hotelManager;
-        public CustomerController()
+        private readonly ICustomerRepository customerRepository;
+        public CustomerController(ICustomerRepository customerRepository)
         {
-            hotelManager = new HotelManager();
+            this.customerRepository = customerRepository;
         }
         // GET: CustomerController
         public ActionResult Index([FromQuery] CustomerSearchViewModel searchVM)
         {
-            var customers = hotelManager.GetAllCustomersByFilter(searchVM.Name, searchVM.PhoneNumber, searchVM.SortBy);
-            return View(customers);
+            var customers = customerRepository.GetAllCustomersByFilter(searchVM.Name, searchVM.PhoneNumber, searchVM.SortBy);            return View(customers);
         }
         // GET: CustomerController/Details/5
         public ActionResult Details(int id)
         {
-            var customer = hotelManager.GetCustomer(id);
+            var customer = customerRepository.GetCustomerById(id);
             return View(customer);
         }
 
@@ -38,14 +36,14 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Customer newCustomer)
         {
-            hotelManager.AddCustomer(newCustomer);
-            return RedirectToAction(nameof(Index));
+            customerRepository.AddCustomer(newCustomer);
+            return RedirectToAction("Index");
         }
 
         // GET: CustomerController/Edit/5
         public ActionResult Edit(int id)
         { 
-            return View(hotelManager.GetCustomer(id));
+            return View(customerRepository.GetCustomerById(id));
         }
 
         // POST: CustomerController/Edit/5
@@ -53,9 +51,9 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Customer customer)
         {
-            var customerToUpdate = hotelManager.GetCustomer(customer.Id);
-            hotelManager.UpdateCustomerName(customerToUpdate, customer.Name);
-            hotelManager.UpdateCustomerPhoneNumber(customerToUpdate, customer.PhoneNumber);
+            var customerToUpdate = customerRepository.GetCustomerById(customer.Id);
+            customerToUpdate.UpdateName(customer.Name);
+            customerToUpdate.UpdatePhoneNumber(customer.PhoneNumber);
             return RedirectToAction(nameof(Index));
         }
 
@@ -63,7 +61,7 @@ namespace Web.Controllers
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            return View(hotelManager.GetCustomer(id));
+            return View(customerRepository.GetCustomerById(id));
         }
 
         // POST: CustomerController/Delete/5
@@ -71,8 +69,8 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(Customer customer)
         {
-            var customerToDelete = hotelManager.GetCustomer(customer.Id);
-            hotelManager.RemoveCustomer(customerToDelete);
+            var customerToDelete = customerRepository.GetCustomerById(customer.Id);
+            customerRepository.RemoveCustomer(customerToDelete);
             return RedirectToAction(nameof(Index));
         }
     }

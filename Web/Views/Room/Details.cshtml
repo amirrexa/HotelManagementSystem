@@ -11,7 +11,7 @@
 <h4>
     <ul>
         <li>Type: @Model.Type</li>
-
+        <input type="hidden" value="@Model.CustomerId" />
         @if (Model.Status == RoomStatus.Reserved || Model.Status == RoomStatus.Assigned)
         {
             <li>Customer: @Model.Customer.Name</li>

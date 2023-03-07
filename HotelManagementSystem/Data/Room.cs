@@ -9,13 +9,13 @@ namespace HotelManagementSystem.Data
 {
     public class Room
     {
-        public byte Number { get; set; }
-        public RoomType Type { get; set; }
-        public RoomStatus Status { get; set; }
-        public Customer Customer { get; set; }
-        public int? CustomerId { get; set; }
-        public int Id { get; set; }
-        public bool IsActive { get; set; }
+        public byte Number { get; private set; }
+        public RoomType Type { get; private set; }
+        public RoomStatus Status { get; private set; }
+        public Customer Customer { get; private set; }
+        public int? CustomerId { get; private set; }
+        public int Id { get; private set; }
+        public bool IsActive { get; private set; }
 
         public Room()
         {
@@ -29,24 +29,12 @@ namespace HotelManagementSystem.Data
             Number = number;
             IsActive = true;
         }
-        public void UpdateStatus(RoomStatus roomStatus)
-        {
-            Status = roomStatus;
-        }
-
-        public void UpdateCustomer(Customer customer)
-        {
-            Customer = customer;
-        }
-
-        public void UpdateNumber(byte number)
-        {
-            Number = number;
-        }
-
-        public void UpdateType(RoomType roomType)
-        {
-            Type = roomType;
-        }
+        
+        // Under Construction
+        public void Update(byte newNumber) { Number = newNumber; }
+        public void Update(RoomStatus newStatus) { Status = newStatus; }
+        public void Update(RoomType newRoomType) { Type = newRoomType; }
+        public void Update(bool newActivation) { IsActive = newActivation; }
+        public void Update(Customer customer) { Customer = customer; }
     }
 }

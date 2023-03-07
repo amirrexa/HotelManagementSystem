@@ -1,4 +1,5 @@
 ﻿using HotelManagementSystem.Migrations;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,6 @@ namespace HotelManagementSystem.Data
 
         public Customer()
         {
-
         }
         public Customer(string name)
         {
@@ -25,7 +25,7 @@ namespace HotelManagementSystem.Data
         {
             Name = newName;
         }
-
+        
         public void UpdatePhoneNumber(string newPhoneNumber)
         {
             PhoneNumber = newPhoneNumber;

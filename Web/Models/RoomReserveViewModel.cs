@@ -2,7 +2,7 @@
 
 namespace Web.Models
 {
-    public class ReserveRoomViewModel
+    public class RoomReserveViewModel
     {
         public int Id { get; set; }
         public int CustomerId { get; set; }

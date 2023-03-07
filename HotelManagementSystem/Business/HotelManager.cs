@@ -136,109 +136,7 @@ namespace HotelManagementSystem.Business
             hotelContext.SaveChanges();
         }
 
-        public void RemoveRoom(Room room)
-        {
-            hotelContext.Remove(room);
-            hotelContext.SaveChanges();
-        }
-
-        public void ReserveRoom(RoomOperation reservation)
-        {
-            if (reservation.Room.Status == RoomStatus.Unoccupied)
-            {
-                reservation.Room.UpdateCustomer(reservation.Customer);
-                reservation.Room.UpdateStatus(RoomStatus.Reserved);
-            }
-            hotelContext.roomOperations.Add(reservation);
-            hotelContext.SaveChanges();
-        }
-
-        public void AssignRoom(RoomOperation assignment)
-        {
-            if (assignment.Room.Status == RoomStatus.Unoccupied)
-            {
-                assignment.Room.UpdateCustomer(assignment.Customer);
-                assignment.Room.UpdateStatus(RoomStatus.Assigned);
-            }
-            else
-                throw new Exception($"Room is {assignment.Room.Status}");
-            hotelContext.roomOperations.Add(assignment);
-            hotelContext.SaveChanges();
-        }
-        public void FreeRoom(Room room)
-        {
-            if (room.Status != RoomStatus.Unoccupied)
-            {
-                room.UpdateStatus(RoomStatus.Unoccupied);
-                room.UpdateCustomer(null);
-            }
-            else
-                throw new Exception("Room is already unoccupied.");
-            hotelContext.SaveChanges();
-        }
-
-
-        public void UpdateRoomStatus(Room room, RoomStatus newStatus)
-        {
-            room.UpdateStatus(newStatus);
-            hotelContext.SaveChanges();
-        }
-        public void UpdateRoomNumber(Room room, byte number)
-        {
-            room.UpdateNumber(number);
-            hotelContext.SaveChanges();
-        }
-
-        public void UpdateRoomType(Room room, RoomType roomType)
-        {
-            room.UpdateType(roomType);
-            hotelContext.SaveChanges();
-        }
-
-        public void UpdateRoomActivation(Room room, bool isActive)
-        {
-            room.IsActive = isActive;
-            hotelContext.SaveChanges();
-        }
-
-        public void CheckOut(Room room, Customer customer)
-        {
-            if (room.Status != RoomStatus.Unoccupied && room.Customer == customer)
-            {
-                room.UpdateStatus(RoomStatus.Unoccupied);
-                room.UpdateCustomer(null);
-            }
-            else if (room.Status == RoomStatus.Reserved)
-            {
-                this.CancelReservation(room, customer);
-            }
-            hotelContext.SaveChanges();
-        }
-        public void CancelReservation(Room room, Customer customer)
-        {
-            if (room.Status == RoomStatus.Reserved && room.Customer == customer)
-            {
-                room.UpdateStatus(RoomStatus.Unoccupied);
-                room.UpdateCustomer(null);
-                Console.WriteLine("Reservation cancelled successfully.");
-            }
-            hotelContext.SaveChanges();
-        }
-        public void CancelAllReservations()
-        {
-            foreach (var room in hotelContext.rooms)
-            {
-                if (room.Status == RoomStatus.Reserved)
-                {
-                    room.UpdateStatus(RoomStatus.Unoccupied);
-                    room.UpdateCustomer(null);
-                }
-            }
-            hotelContext.SaveChanges();
-        }
-
         //OPERATION METHODS
-
         public List<RoomOperation> GetAllRoomOperations()
         {
             return (hotelContext.roomOperations.ToList());
@@ -257,18 +155,13 @@ namespace HotelManagementSystem.Business
             if (roomNumber.HasValue)
                 query = query.Include(o => o.Room).Where(o => o.Room.Number == roomNumber);
             if (fromDate.HasValue)
-                query = query.Where(o => o.FromDate > fromDate); //In ghablesh == bood; moshkeli ke ijad mikard in bood ke fromdate ro vared mikardi hichi nemiavord
+                query = query.Where(o => o.FromDate >= fromDate); //In ghablesh == bood; moshkeli ke ijad mikard in bood ke fromdate ro vared mikardi hichi nemiavord
             if (toDate.HasValue)
-                query = query.Where(o => o.ToDate < toDate); //In ghablesh == bood; moshkeli ke ijad mikard in bood ke todate ro vared mikardi hichi nemiavord
+                query = query.Where(o => o.ToDate <= toDate); //In ghablesh == bood; moshkeli ke ijad mikard in bood ke todate ro vared mikardi hichi nemiavord
             if (paidAmount.HasValue)
                 query = query.Where(o => o.PaidAmount == paidAmount);
             if (roomActionType.HasValue)
-            {
-                if (roomActionType == RoomActionType.Assignment)
-                    query = query.Where(o => o.RoomActionType == RoomActionType.Assignment);
-                if (roomActionType == RoomActionType.Reservation)
-                    query = query.Where(o => o.RoomActionType == RoomActionType.Reservation);
-            }
+                query = query.Where(o => o.RoomActionType == roomActionType.Value);
             if (sortBy.HasValue)
             {
                 if (sortBy == OperationSortBy.RoomNumber)

@@ -16,13 +16,11 @@
         <form asp-action="Index" asp-controller="Operation" method="get">
 
             Room Number: <input type="number" name="RoomNumber" value=""><br />
-
             Customer Name: <input type="text" name="CustomerName" value="" /><br />
-
-            Action Type: <select name="ActionType">
+            Action Type: <select name="RoomActionType">
                 <option value="" selected></option>
                 <option value="@RoomActionType.Assignment">Assignment</option>
-                <option value="@RoomActionType.Reservation">Reserved</option>
+                <option value="@RoomActionType.Reservation">Reservation</option>
             </select><br />
             From Date: <input type="date" name="FromDate" value="" /><br />
             To Date: <input type="date" name="ToDate" value="" /><br />

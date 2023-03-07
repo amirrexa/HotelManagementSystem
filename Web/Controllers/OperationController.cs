@@ -1,5 +1,7 @@
-﻿using HotelManagementSystem.Business;
+﻿
+using HotelManagementSystem.Business;
 using HotelManagementSystem.Data;
+using HotelManagementSystem.Data.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Web.Models;
@@ -8,27 +10,24 @@ namespace Web.Controllers
 {
     public class OperationController : Controller
     {
-        private readonly HotelManager hotelManager;
-        public OperationController()
+        private readonly IOperationRepository operationRepository;
+        public OperationController(IOperationRepository operationRepository)
         {
-            hotelManager = new HotelManager();
+            this.operationRepository = operationRepository;
         }
-
         // GET: OperationsController
         [HttpGet]
         public ActionResult Index([FromQuery] OperationSearchViewModel searchVM)
         {
-            var operationToSearch = hotelManager.GetAllOperationsByFilter( searchVM.CustomerName, searchVM.RoomNumber, searchVM.FromDate, searchVM.ToDate, searchVM.PaidAmount, searchVM.RoomActionType, searchVM.SortBy);
+            var operationToSearch = operationRepository.GetAllOperationsByFilter( searchVM.CustomerName, searchVM.RoomNumber, searchVM.FromDate, searchVM.ToDate, searchVM.PaidAmount, searchVM.RoomActionType, searchVM.SortBy);
             return View((operationToSearch, searchVM));
         }
-
         // GET: OperationsController/Details/5
         public ActionResult Details(int id)
         {
-            var operationToShow = hotelManager.GetRoomOperation(id);
+            var operationToShow = operationRepository.GetRoomOperationById(id);
             return View(operationToShow);
         }
-
         // GET: OperationsController/Create
         public ActionResult Create()
         {
@@ -74,7 +73,7 @@ namespace Web.Controllers
         // GET: OperationsController/Delete/5
         public ActionResult Delete(int id)
         {
-            var roomOperationToDelete = hotelManager.GetRoomOperation(id);
+            var roomOperationToDelete = operationRepository.GetRoomOperationById(id);
             return View(roomOperationToDelete);
         }
 

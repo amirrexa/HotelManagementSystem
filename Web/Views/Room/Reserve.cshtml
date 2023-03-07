@@ -3,24 +3,79 @@
     ViewData["Title"] = "Room Reservation";
 }
 @model (Room room, List<DropDownViewModel> customers)
+
+<head>
+    <script>
+        function validateForm() {
+            let customer = document.forms["ReservationForm"]["CustomerId"].value;
+            //let fromDate = document.forms["ReservationForm"]["FromDate"].value;
+            let fromDateString = document.getElementById("fromDate").value; //String
+            let fromDateDate = new Date(fromDate); //Date
+            let toDateString = document.getElementById("toDate").value; //String
+            let toDateDate = new Date(toDate); //Date
+            //let toDate = document.forms["ReservationForm"]["ToDate"].value;
+            let paidAmount = document.forms["ReservationForm"]["PaidAmount"].value;
+            let currentDate = new Date();
+            let isValid = true;
+                document.getElementById("customerError").innerHTML = customer == ""? "A customer must be selected.":"";
+             (fromDateString == undefined | fromDateString == null | fromDateString == "") ?
+                document.getElementById("fromDateError").innerHTML = "Starting date must be defined.":"";
+            
+            fromDateDate < Date() ?
+                document.getElementById("fromDateError").innerHTML = "Starting date is before the current time.":"";
+            if (fromDateDate > toDateDate) {
+                document.getElementById("fromDateError").innerHTML = "Starting date is after the ending date.";
+            }
+            if (toDateDate == "") {
+                document.getElementById("toDateError").innerHTML = "Ending date must be defined.";
+            }
+            if (toDateDate < Date()) {
+                document.getElementById("toDateError").innerHTML = "Ending date is before the current time.";
+            }
+            if (toDateDate < fromDateDate) {
+                document.getElementById("toDateError").innerHTML = "Ending date is before the starting date.";
+            }
+            if (paidAmount == "") {
+                document.getElementById("paidAmountError").innerHTML = "Paid amount must be defined.";
+            }
+            if (Number.paidAmount < 0) {
+                document.getElementById("paidAmountError").innerHTML = "Paid amount is less than zero."
+            }
+            isValid = customer != "" & !(fromDateString == undefined | fromDateString == null | fromDateString == "")
+            
+            /*else {
+                isValid = true;
+            }*/
+
+            return isValid;
+        }
+    </script>
+</head>
 <blockquote>
-    <form asp-action="Reserve" asp-controller="Room" method="post">
+    <form asp-action="Reserve" asp-controller="Room" method="post" name="ReservationForm" onsubmit="return validateForm()">
         <input type="hidden" name="RoomId" value="@Model.room.Id"> <!-- important concept-->
+        Choose a customer:
+        <br />
         <select name="CustomerId">
+            <option value="" selected></option>
             @foreach (var customer in Model.customers)
             {
+
                 <option value="@customer.Id">@customer.Value</option>
                 // "option value" must be a unique property
             }
         </select>
+        <p style="color:red" id="customerError"></p>
         <hr>
-        <input type="date" name="FromDate" placeholder="Enter the beginning of reservation date: ">
+        From Date: <input type="date" name="FromDate" id="fromDate" placeholder="Enter the beginning of reservation date: ">
+        <p style="color:red" id="fromDateError"></p>
         <br>
-        <input type="date" name="ToDate" placeholder="Enter the end of reservation date: ">
+        To Date: <input type="date" name="ToDate" id="toDate" placeholder="Enter the end of reservation date: ">
+        <p style="color:red" id="toDateError"></p>
         <hr>
-        <input type="text" name="PaidAmount" placeholder="Enter the paid amount: ">
+        Paid Amount: <input type="text" name="PaidAmount" placeholder="Enter the paid amount: ">
+        <p style="color:red" id="paidAmountError"></p>
         <hr>
         <button type="submit" class="btn btn-primary">Reserve</button>
-
     </form>
 </blockquote>

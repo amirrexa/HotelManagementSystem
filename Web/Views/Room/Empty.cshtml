@@ -1,0 +1,15 @@
+﻿@using HotelManagementSystem.Data;
+@{
+    ViewData["Title"] = "Empty Room";
+}
+@model Room
+<h2>Empty Room @Model.Number</h2>
+<hr>
+<blockquote>
+    <form asp-action="Empty" asp-controller="Room" method="post">
+        <input type="hidden" value="@Model.Id" name="Id" />
+        <h3>Are you sure that you want to empty this room?</h3>
+        <hr>
+        <button type="submit">Empty</button>
+    </form>
+</blockquote>

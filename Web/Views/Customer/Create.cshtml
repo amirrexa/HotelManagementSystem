@@ -8,10 +8,10 @@
     <form asp-action="Create" asp-controller="Customer" method="post">
         
         <label>Name: </label>
-        <input type="text" placeholder="Enter a name" asp-for="Name">
+        <input type="text" placeholder="Enter a name" asp-for="Name" required>
         <hr>
         <label>Phone Number: </label>
-        <input type="text" placeholder="Enter a phone number" asp-for="PhoneNumber">
+        <input type="text" placeholder="Enter a phone number" asp-for="PhoneNumber" required>
         <hr>
         <button type="submit" class="btn btn-primary">Create</button>
     </form>

@@ -1,35 +1,32 @@
-﻿using HotelManagementSystem.Business;
-using HotelManagementSystem.Data;
-using Microsoft.AspNetCore.Http;
+﻿using HotelManagementSystem.Data;
+using HotelManagementSystem.Data.Repository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using Web.Models;
 
 namespace Web.Controllers
 {
     public class RoomController : Controller
     {
-        private readonly HotelManager hotelManager;
+        private readonly IRoomRepository roomRepository;
+        private readonly ICustomerRepository customerRepository;
 
-        public RoomController()
+        public RoomController(IRoomRepository roomRepository, ICustomerRepository customerRepository)
         {
-            hotelManager = new HotelManager();
+            this.roomRepository = roomRepository;
+            this.customerRepository = customerRepository;
         }
 
         // GET: RoomController
         public ActionResult Index([FromQuery] RoomSearchViewModel searchVM)
         {
-            var roomToSearch = hotelManager.GetAllRoomsByFilter(searchVM.Number, searchVM.Type, searchVM.Status, searchVM.IsActive, searchVM.SortBy);
+            var roomToSearch = roomRepository.GetAllRoomsByFilter(searchVM.Number, searchVM.Type, searchVM.Status, searchVM.IsActive, searchVM.SortBy);
             return View((roomToSearch, searchVM));
         }
-
-        
 
         // GET: RoomController/Details/5
         public ActionResult Details(int id)
         {
-            var room = hotelManager.GetRoom(id);
+            var room = roomRepository.GetRoomById(id); //Moshkele nullreference dadane customer az implementatione GetRoomById bood ke customer ro include nakarde boodam
             return View(room);
         }
 
@@ -58,20 +55,22 @@ namespace Web.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            var room = hotelManager.GetRoom(id);
-            return View(room);
+            var roomToUpdate = roomRepository.GetRoomById(id);
+            return View(roomToUpdate);
         }
 
         // POST: RoomController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Room room)
+        public ActionResult Edit(RoomViewModel room)
         {
-            var roomToUpdate = hotelManager.GetRoom(room.Id);
-            hotelManager.UpdateRoomNumber(roomToUpdate, room.Number);
-            hotelManager.UpdateRoomStatus(roomToUpdate, room.Status);
-            hotelManager.UpdateRoomType(roomToUpdate, room.Type);
-            hotelManager.UpdateRoomActivation(roomToUpdate, room.IsActive);
+            var roomToUpdate = roomRepository.GetRoomById(room.Id) ??
+                throw new Microsoft.AspNetCore.Http.BadHttpRequestException("room not found");
+            roomToUpdate.Update(room.Number);
+            roomToUpdate.Update(room.Status);
+            roomToUpdate.Update(room.Type);
+            roomToUpdate.Update(room.IsActive);
+            roomRepository.Update(roomToUpdate); //havaset part nashe, in updatesh fargh dare
             return RedirectToAction("Index");
         }
 
@@ -97,107 +96,61 @@ namespace Web.Controllers
         }
 
         [HttpGet]
-        public ActionResult Cancel(int id)
+        public ActionResult Empty(int id)
         {
-            var roomToCancel = hotelManager.GetRoom(id);
-            var customerToCancel = roomToCancel.Customer;
-            return View((roomToCancel, customerToCancel));
+            var roomToEmpty = roomRepository.GetRoomById(id);
+            return View(roomToEmpty);
         }
 
         [HttpPost]
-        public ActionResult Cancel(Room room)
+        public ActionResult Empty(RoomViewModel room) //mishe az ReserveRoomViewModel ya harchize digeii ke id-e room ro dare ham estefade kard
         {
-            var roomToCancelReservation = hotelManager.GetRoom(room.Id);
-            hotelManager.CancelReservation(roomToCancelReservation, roomToCancelReservation.Customer);
-            return RedirectToAction("Index");
-        }
-
-        [HttpGet]
-        public ActionResult Free(int id)
-        {
-            var roomToFree = hotelManager.GetRoom(id);
-            return View(roomToFree);
-        }
-
-        [HttpPost]
-        public ActionResult Free(Room room)
-        {
-            var roomToFree = hotelManager.GetRoom(room.Id);
-            hotelManager.FreeRoom(roomToFree);
+            var roomToEmpty = roomRepository.GetRoomById(room.Id);
+            roomRepository.Empty(roomToEmpty);
             return RedirectToAction("Index");
         }
 
         [HttpGet]
         public ActionResult Reserve(int id)
         {
-            var roomToReserve = hotelManager.GetRoom(id);
-            var customers = hotelManager
+            var roomToReserve = roomRepository.GetRoomById(id);
+            var customers = customerRepository
                 .GetAllCustomers()
                 .Select(c => new DropDownViewModel(c.Id, c.Name))
                 .ToList();
-
-            var tuple = (roomToReserve, customers);
-            return View(tuple);
+            return View((roomToReserve, customers));
         }
 
         [HttpPost]
-        public ActionResult Reserve(ReserveRoomViewModel reserve)
+        public ActionResult Reserve(RoomReserveViewModel reserve)
         {
-            var roomToReserve = hotelManager.GetRoom(reserve.RoomId);
-            var customerToReserve = hotelManager.GetCustomer(reserve.CustomerId);
+            var roomToReserve = roomRepository.GetRoomById(reserve.RoomId);
+            var customerToReserve = customerRepository.GetCustomerById(reserve.CustomerId);
             var reservation = new RoomOperation(roomToReserve, customerToReserve, reserve.FromDate, reserve.ToDate, reserve.PaidAmount, RoomActionType.Reservation);
-            hotelManager.ReserveRoom(reservation);
+            roomRepository.Reserve(reservation);
             return RedirectToAction("Index");
         }
 
         [HttpGet]
         public ActionResult Assign(int id)
         {
-            var roomToAssign = hotelManager.GetRoom(id);
-            var customers = hotelManager
+            var roomToAssign = roomRepository.GetRoomById(id);
+            var customers = customerRepository
                 .GetAllCustomers()
                 .Select(c => new DropDownViewModel(c.Id, c.Name))
                 .ToList();
-
-            ViewBag.Id = new SelectList(customers, string.Empty);
-
-            var tuple = (roomToAssign, customers);
-            return View(tuple);
+            //ViewBag.Id = new SelectList(customers, string.Empty);
+            return View((roomToAssign, customers));
         }
 
         [HttpPost]
         public ActionResult Assign(RoomOperation assign)
         {
-            var roomToAssign = hotelManager.GetRoom(assign.RoomId);
-            var customerToAssign = hotelManager.GetCustomer(assign.CustomerId);
+            var roomToAssign = roomRepository.GetRoomById(assign.RoomId);
+            var customerToAssign = customerRepository.GetCustomerById(assign.CustomerId);
             var assignment = new RoomOperation(roomToAssign, customerToAssign, DateTime.Now, assign.ToDate, assign.PaidAmount, RoomActionType.Assignment);
-            hotelManager.AssignRoom(assignment);
+            roomRepository.Assign(assignment);
             return RedirectToAction("Index");
         }
-
-        //OPERATION
-
-        [HttpGet]
-        public ActionResult Operation(int id)
-        {
-            var roomToOperate = hotelManager.GetRoom(id);
-            return View(roomToOperate);
-        }
-
-        [HttpPost]
-        public ActionResult Operation(RoomActionType roomActionType)
-        {
-            switch (roomActionType)
-            {
-                case RoomActionType.Assignment:
-                    return RedirectToAction("Assign");
-                case RoomActionType.Reservation:
-                    return RedirectToAction("Reserve");
-                default:
-                    return View();
-            }
-        }
-
-        //SEARCH
     }
 }

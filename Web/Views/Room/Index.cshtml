@@ -80,13 +80,9 @@
 
                                 <!-- <a class="btn btn-outline-warning" asp-route-id=@item.Id asp-controller="Room" asp-action="Operation">Operation</a> -->
                             }
-                            @if (item.Status == RoomStatus.Assigned)
+                            @if (item.Status == RoomStatus.Assigned || item.Status==RoomStatus.Reserved)
                             {
-                                <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Room" asp-action="Free">Free</a>
-                            }
-                            @if (item.Status == RoomStatus.Reserved)
-                            {
-                                <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Room" asp-action="Cancel">Cancel</a>
+                                <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Room" asp-action="Empty">Empty</a>
                             }
                         </td>
                     }

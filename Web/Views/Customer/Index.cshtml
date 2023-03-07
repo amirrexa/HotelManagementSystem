@@ -3,21 +3,41 @@
     ViewData["Title"] = "Customer Management";
 }
 @model List<Customer>
-
-
-
     
 <h2>Customer Management</h2>
 <form method="post" asp-controller="Customer" asp-action="Index">
     <input type="submit" value="Index" />
 </form>
 <hr />
+<h5>Filter</h5>
+<div>
+    <p>
+        <form asp-action="Index" asp-controller="Customer" method="get">
+
+            Name: <input type="text" name="Name" value=""><br />
+            Phone Number: <input type="text" name="PhoneNumber" value="" /><br />
+            Sort By: <select name="SortBy">
+                <option value="" selected></option>
+                <option value="@CustomerSortBy.Name">Name</option>
+                <option value="@CustomerSortBy.PhoneNumber">Phone Number</option>
+            </select><br /><br />
+            <button type="submit">Search</button>
+            <button type="reset">Clear</button>
+        </form>
+    </p>
+</div>
+<hr />
+<form asp-action="Create" asp-controller="Customer" method="get">
+    <button type="submit">Create New</button>
+</form>
+<!--
 @Html.ActionLink("Create New", "Create")
+-->
 <div class="text-center">
-    
     <table class="table" style="width:100%">
         <tr>
             <th>Name</th>
+            <th>PhoneNumber</th>
             <th>Operation</th>
         </tr>
 
@@ -25,8 +45,8 @@
             foreach (var item in Model)
             {
                 <tr>
-                
                     <td>@item.Name</td>
+                    <td>@item.PhoneNumber</td>
                     <td>
                         <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Customer" asp-action="Details">Details</a>
                         <a class="btn btn-outline-warning" asp-route-id="@item.Id" asp-controller="Customer" asp-action="Edit">Edit</a>

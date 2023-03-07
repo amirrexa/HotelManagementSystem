@@ -22,6 +22,6 @@
         }
         <li>From Date: @Model.FromDate</li>
         <li>To Date: @Model.ToDate</li>
-        <li>Total Paid Amount: $@Model.PaidAmount</li>
+        <li>Total Paid Amount: @Model.PaidAmount.ToString("C")</li> <!-- .ToString("C") baraye format kardane number be onvane currencye -->
     </ul>
 </h4>
