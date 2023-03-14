@@ -7,53 +7,92 @@
 <head>
     <script>
         function validateForm() {
-            let customer = document.forms["ReservationForm"]["CustomerId"].value;
-            //let fromDate = document.forms["ReservationForm"]["FromDate"].value;
-            let fromDateString = document.getElementById("fromDate").value; //String
-            let fromDateDate = new Date(fromDate); //Date
-            let toDateString = document.getElementById("toDate").value; //String
-            let toDateDate = new Date(toDate); //Date
-            //let toDate = document.forms["ReservationForm"]["ToDate"].value;
-            let paidAmount = document.forms["ReservationForm"]["PaidAmount"].value;
-            let currentDate = new Date();
-            let isValid = true;
-                document.getElementById("customerError").innerHTML = customer == ""? "A customer must be selected.":"";
-             (fromDateString == undefined | fromDateString == null | fromDateString == "") ?
-                document.getElementById("fromDateError").innerHTML = "Starting date must be defined.":"";
-            
-            fromDateDate < Date() ?
-                document.getElementById("fromDateError").innerHTML = "Starting date is before the current time.":"";
-            if (fromDateDate > toDateDate) {
-                document.getElementById("fromDateError").innerHTML = "Starting date is after the ending date.";
+            const customer = document.forms["ReservationForm"]["CustomerId"].value;
+            const fromDateVal = document.getElementById("fromDate").value,
+                fromDate = new Date(fromDateVal); //Type: Date
+            const toDateVal = document.getElementById("toDate").value,
+                toDate = new Date(toDateVal); //Type: Date
+            const paidAmount = document.forms["ReservationForm"]["PaidAmount"].value;
+            const currentDate = new Date();
+
+            //customer Conditions:
+            if (document.getElementById("customerError").innerHTML = (customer == "")) {
+                document.getElementById("customerError").innerHTML = "A customer must be selected.";
             }
-            if (toDateDate == "") {
+            else {
+                document.getElementById("customerError").innerHTML = "";
+            }
+
+            //fromDate Conditions:
+            if ((document.getElementById("fromDateError").innerHTML = (fromDateVal == ''))) {
+                document.getElementById("fromDateError").innerHTML = "Starting date must be defined.";
+            }
+            else if ((document.getElementById("fromDateError").innerHTML = (fromDate < currentDate))) {
+                document.getElementById("fromDateError").innerHTML = "Starting date must be defined after the current date.";
+            }
+            else if (document.getElementById("fromDateError").innerHTML = (fromDate > toDate)) {
+                document.getElementById("fromDateError").innerHTML = "Starting date must be defined before the ending date.";
+            }
+            else {
+                document.getElementById("fromDateError").innerHTML = "";
+            }
+
+            //PREVIOUS fromDate Conditions:
+            /*
+            document.getElementById("fromDateError").innerHTML = (fromDateVal == '') ?
+                "Starting date must be defined." : "";
+
+            document.getElementById("fromDateError").innerHTML = (fromDateVal == '' && fromDate < Date()) ?
+                "Starting date is before the current time." : "";
+
+            document.getElementById("fromDateError").innerHTML = (fromDateVal == '' && toDateVal == '' && fromDate > toDate) ?
+                "Starting date is after the ending date." : "";
+            */
+
+            //toDate Conditions:
+            if ((document.getElementById("toDateError").innerHTML = (toDateVal == ''))) {
                 document.getElementById("toDateError").innerHTML = "Ending date must be defined.";
             }
-            if (toDateDate < Date()) {
-                document.getElementById("toDateError").innerHTML = "Ending date is before the current time.";
+            else if ((document.getElementById("toDateError").innerHTML = (toDate < currentDate))) {
+                document.getElementById("toDateError").innerHTML = "Ending date must be defined after the current date.";
             }
-            if (toDateDate < fromDateDate) {
-                document.getElementById("toDateError").innerHTML = "Ending date is before the starting date.";
+            else if (document.getElementById("toDateError").innerHTML = (toDate < fromDate)) {
+                document.getElementById("toDateError").innerHTML = "Ending date must be defined after the starting date.";
             }
-            if (paidAmount == "") {
+            else {
+                document.getElementById("toDateError").innerHTML = "";
+            }
+            //PREVIOUS toDate Conditions:
+            /*
+             document.getElementById("toDateError").innerHTML = (toDateVal == '') ?
+                 "Ending date must be defined." : "";
+
+             document.getElementById("toDateError").innerHTML = (fromDateVal == '' || toDateVal == '' || toDate < Date()) ?
+                 "Ending date is before the current time." : "";
+
+             document.getElementById("toDateError").innerHTML = (fromDateVal == '' || toDateVal == '' || toDate < fromDate) ?
+                 "Ending date is before the starting date." : "";
+             */
+
+            //paidAmount Conditions:
+            if (document.getElementById("paidAmountError").innerHTML = (paidAmount < 0)) {
+                document.getElementById("paidAmountError").innerHTML = "Paid amount must be more than zero.";
+            }
+            else if (document.getElementById("paidAmountError").innerHTML = (paidAmount == "")) {
                 document.getElementById("paidAmountError").innerHTML = "Paid amount must be defined.";
             }
-            if (Number.paidAmount < 0) {
-                document.getElementById("paidAmountError").innerHTML = "Paid amount is less than zero."
+            else {
+                document.getElementById("paidAmountError").innerHTML = "";
             }
-            isValid = customer != "" & !(fromDateString == undefined | fromDateString == null | fromDateString == "")
-            
-            /*else {
-                isValid = true;
-            }*/
 
-            return isValid;
+            if (Array.prototype.slice.call(document.getElementsByClassName("error-message")).filter(e => e.innerHTML != '').length == 0)
+                document.forms["ReservationForm"].submit();
         }
     </script>
 </head>
 <blockquote>
-    <form asp-action="Reserve" asp-controller="Room" method="post" name="ReservationForm" onsubmit="return validateForm()">
-        <input type="hidden" name="RoomId" value="@Model.room.Id"> <!-- important concept-->
+    <form asp-action="Reserve" asp-controller="Room" method="post" name="ReservationForm" onsubmit="event.preventDefault(); validateForm();">
+        <input type="hidden" name="RoomId" value="@Model.room.Id"> <!-- important concept -->
         Choose a customer:
         <br />
         <select name="CustomerId">
@@ -65,16 +104,18 @@
                 // "option value" must be a unique property
             }
         </select>
-        <p style="color:red" id="customerError"></p>
+        <p class="error-message" style="color:red" id="customerError"></p>
         <hr>
-        From Date: <input type="date" name="FromDate" id="fromDate" placeholder="Enter the beginning of reservation date: ">
-        <p style="color:red" id="fromDateError"></p>
+        From Date:
+        <input type="date" name="FromDate" id="fromDate" placeholder="Enter the beginning of reservation date: ">
+        <p class="error-message" style="color:red" id="fromDateError"></p>
         <br>
-        To Date: <input type="date" name="ToDate" id="toDate" placeholder="Enter the end of reservation date: ">
-        <p style="color:red" id="toDateError"></p>
+        To Date:
+        <input type="date" name="ToDate" id="toDate" placeholder="Enter the end of reservation date: ">
+        <p class="error-message" style="color:red" id="toDateError"></p>
         <hr>
         Paid Amount: <input type="text" name="PaidAmount" placeholder="Enter the paid amount: ">
-        <p style="color:red" id="paidAmountError"></p>
+        <p class="error-message" style="color:red" id="paidAmountError"></p>
         <hr>
         <button type="submit" class="btn btn-primary">Reserve</button>
     </form>

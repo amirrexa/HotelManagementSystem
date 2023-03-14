@@ -71,18 +71,28 @@ namespace HotelManagementSystem.Data.Repository
         */
         public void Reserve(RoomOperation reservation)
         {
-            if (reservation.Room.Status == RoomStatus.Unoccupied)
+            if (reservation.Room.Status == RoomStatus.Unoccupied &
+                !string.IsNullOrEmpty(reservation.Customer.Name) &
+                !string.IsNullOrEmpty(reservation.FromDate.ToString()) &
+                !string.IsNullOrEmpty(reservation.ToDate.ToString()) &
+                !string.IsNullOrEmpty(reservation.PaidAmount.ToString()))
             {
                 reservation.Room.Update(reservation.Customer);
                 reservation.Room.Update(RoomStatus.Reserved);
             }
+            else
+                throw new Exception($"Room is {reservation.Room.Status}");
             hotelContext.roomOperations.Add(reservation);
             hotelContext.SaveChanges();
         }
 
         public void Assign(RoomOperation assignment)
         {
-            if (assignment.Room.Status == RoomStatus.Unoccupied)
+            if (assignment.Room.Status == RoomStatus.Unoccupied &
+                !string.IsNullOrEmpty(assignment.Customer.Name) &
+                !string.IsNullOrEmpty(assignment.FromDate.ToString()) &
+                !string.IsNullOrEmpty(assignment.ToDate.ToString()) &
+                !string.IsNullOrEmpty(assignment.PaidAmount.ToString()))
             {
                 assignment.Room.Update(assignment.Customer);
                 assignment.Room.Update(RoomStatus.Assigned);

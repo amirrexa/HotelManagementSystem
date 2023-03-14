@@ -3,11 +3,11 @@
     ViewData["Title"] = "Operation Management";
 }
 @model (List<RoomOperation> operations, OperationSearchViewModel searchVM)
-
-    <h2>Operation Management</h2>
-<form method="post" asp-controller="Operation" asp-action="Index">
-    <input type="submit" value="Index" />
+<form>
+    <input type="submit" value="Back" onclick="history.back" />
+    <input type="submit" value="Forward" onclick="history.forward" />
 </form>
+<center><h1>Operation Management</h1></center>
 <hr />
 <!-- Begin Search -->
 <h5>Filter</h5>

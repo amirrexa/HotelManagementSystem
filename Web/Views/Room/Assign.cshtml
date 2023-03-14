@@ -7,56 +7,67 @@
 <head>
     <script>
         function validateForm() {
-            let customer = document.forms["AssignmentForm"]["CustomerId"].value;
-            let fromDate = document.forms["AssignmentForm"]["FromDate"].getTime();
-            let paidAmount = document.forms["AssignmentForm"]["PaidAmount"].value;
-            if (customer == "") {
+            const customer = document.forms["AssignmentForm"]["CustomerId"].value;
+            const toDateVal = document.getElementById("toDate").value,
+                toDate = new Date(toDateVal); //Type: Date
+            const paidAmount = document.forms["AssignmentForm"]["PaidAmount"].value;
+            const currentDate = new Date();
+
+            //customer Conditions:
+            if (document.getElementById("customerError").innerHTML = (customer == "")) {
                 document.getElementById("customerError").innerHTML = "A customer must be selected.";
-                return false;
-            } else if (fromDate == "") {
-                document.getElementById("fromDateError").innerHTML = "Starting date must be defined.";
-                return false;
+            }
+            else {
+                document.getElementById("customerError").innerHTML = "";
             }
 
-            Date.
-                if(fromDate < Date.now) {
-                document.getElementById("fromDateError").innerHTML = "Starting date is before the current time.";
-                return false;
-            }
-            if (fromDate > toDate) {
-                document.getElementById("fromDateError").innerHTML = "Starting date is after the ending date.";
-                return false;
-            }
-            if (toDate == "") {
+            //toDate Conditions:
+            if ((document.getElementById("toDateError").innerHTML = (toDateVal == ''))) {
                 document.getElementById("toDateError").innerHTML = "Ending date must be defined.";
-                return false;
-            } if (toDate < fromDate) {
-                document.getElementById("toDateError").innerHTML = "Ending date is before the starting date.";
-                return false;
-            } if (paidAmount == "") {
-                document.getElementById("paidAmountError").innerHTML = "Paid amount must be defined.";
-                return false;
             }
-            else
-                return true;
+            else if ((document.getElementById("toDateError").innerHTML = (toDate < currentDate))) {
+                document.getElementById("toDateError").innerHTML = "Ending date must be defined after the current date.";
+            }
+            else {
+                document.getElementById("toDateError").innerHTML = "";
+            }
+
+            //paidAmount Conditions:
+            if (document.getElementById("paidAmountError").innerHTML = (paidAmount < 0)) {
+                document.getElementById("paidAmountError").innerHTML = "Paid amount must be more than zero.";
+            }
+            else if (document.getElementById("paidAmountError").innerHTML = (paidAmount == "")) {
+                document.getElementById("paidAmountError").innerHTML = "Paid amount must be defined.";
+            }
+            else {
+                document.getElementById("paidAmountError").innerHTML = "";
+            }
+
+            if (Array.prototype.slice.call(document.getElementsByClassName("error-message")).filter(e => e.innerHTML != '').length == 0)
+                document.forms["AssignmentForm"].submit();
         }
     </script>
 </head>
 
 <blockquote>
-    <form asp-action="Assign" asp-controller="Room" method="post" name="AssignmentForm">
+    <form asp-action="Assign" asp-controller="Room" method="post" name="AssignmentForm" onsubmit="event.preventDefault(); validateForm();">
         <input type="hidden" name="RoomId" value="@Model.room.Id"> <!-- bayad room id ro dashte bashe ke khodemoon be soorate dasti midim behesh -->
-        Choose a customer:<br /><select name="CustomerId" required>
+        Choose a customer:<br /><select name="CustomerId">
+            <option value="" selected></option>
             @foreach (var customer in Model.customers)
             {
+                
                 <option value="@customer.Id">@customer.Value</option>
             }
         </select>
+        <p id="customerError" class="error-message" style="color:red"></p>
         <hr>
-        <input type="hidden" name="FromDate" placeholder="Enter the beginning of reservation date: " required>
-        To Date: <input type="date" name="ToDate" placeholder="Enter the end of reservation date: " required>
+        <input type="hidden" name="FromDate" placeholder="Enter the starting date: " value="Date()" >
+        To Date: <input type="date" name="ToDate" id="toDate" placeholder="Enter the end of reservation date: " >
+        <p id="toDateError" class="error-message" style="color:red"></p>
         <hr>
-        Paid Amount: <input type="text" name="PaidAmount" placeholder="Enter the paid amount: ">
+        Paid Amount: <input type="text" name="PaidAmount" id="paidAmount" placeholder="Enter the paid amount: ">
+        <p id="paidAmountError" class="error-message" style="color:red"></p>
         <hr>
         <button type="submit" class="btn btn-primary">Assign</button>
     </form>
